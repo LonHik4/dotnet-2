@@ -10,7 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{E8AF6F
 		Protos\sudoku.proto = Protos\sudoku.proto
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuServerTests", "SudokuServerTests\SudokuServerTests.csproj", "{AF8D6584-6F49-414E-99C2-AAF90D74DA44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuServerTests", "SudokuServerTests\SudokuServerTests.csproj", "{AF8D6584-6F49-414E-99C2-AAF90D74DA44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuClient", "SudokuClient\SudokuClient.csproj", "{D7343EE5-6B33-4EF1-AF7A-96C630F58854}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProtoLib", "ProtoLib\ProtoLib.csproj", "{7AD00316-10D7-4E4C-8577-4B073ADC32E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku", "Sudoku\Sudoku.csproj", "{F891EC00-B981-461F-8F68-8A05E412EDEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +32,18 @@ Global
 		{AF8D6584-6F49-414E-99C2-AAF90D74DA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF8D6584-6F49-414E-99C2-AAF90D74DA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF8D6584-6F49-414E-99C2-AAF90D74DA44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7343EE5-6B33-4EF1-AF7A-96C630F58854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7343EE5-6B33-4EF1-AF7A-96C630F58854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7343EE5-6B33-4EF1-AF7A-96C630F58854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7343EE5-6B33-4EF1-AF7A-96C630F58854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AD00316-10D7-4E4C-8577-4B073ADC32E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AD00316-10D7-4E4C-8577-4B073ADC32E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AD00316-10D7-4E4C-8577-4B073ADC32E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AD00316-10D7-4E4C-8577-4B073ADC32E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F891EC00-B981-461F-8F68-8A05E412EDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F891EC00-B981-461F-8F68-8A05E412EDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F891EC00-B981-461F-8F68-8A05E412EDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F891EC00-B981-461F-8F68-8A05E412EDEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
@@ -26,12 +27,14 @@ namespace SudokuClient
 
         public IObservable<Unit> SuccessLoginEvent => _loginSubject;
         public IObservable<Unit> PLayStartEvent => _playSubject;
+        public IObservable<bool> TurnEvent => _turnSubject;
         public IObservable<string> DisconnectedEvent => _disconnectedSubject;
 
         private readonly GrpcChannel _channel;
         private readonly AsyncDuplexStreamingCall<Request, Event> _stream;
         private readonly Subject<Unit> _loginSubject = new();
         private readonly Subject<Unit> _playSubject = new();
+        private readonly Subject<bool> _turnSubject = new();
         private readonly Subject<string> _disconnectedSubject = new();
         private bool _alreadyDisconnected = false;
 
@@ -72,6 +75,19 @@ namespace SudokuClient
             }
         }
 
+        public async Task TurnRequest(Point point)
+        {
+            try
+            {
+                var turnRequest = new TurnRequset { Point = point };
+                var request = new Request { Turn = turnRequest };
+                await _stream.RequestStream.WriteAsync(request);
+            }
+            catch
+            {
+                OnDisconnected("Server is unreachable.");
+            }
+        }
 
         private async Task ReadEvents()
         {
@@ -101,7 +117,7 @@ namespace SudokuClient
                             OnDisconnected(stream.Current.Error.Error);
                             break;
                         case Event.EventOneofCase.Turn:
-                            throw new InvalidOperationException();
+                            _turnSubject.OnNext(stream.Current.Turn.Success);
                             break;
                         case Event.EventOneofCase.Win:
                             throw new InvalidOperationException();
