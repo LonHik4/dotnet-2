@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "SudokuServer";
+
 
 package sudoku;
 
@@ -53,6 +53,7 @@ message Event {
 
 message LoginEvent {
   bool success = 1;
+  int32 score = 2;
 }
 
 message PlayEvent {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Grpc.Core;
 
+using Sudoku;
 
 using SudokuServer.Models;
 using SudokuServer.Repositories;

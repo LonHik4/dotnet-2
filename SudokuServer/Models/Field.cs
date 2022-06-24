@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Sudoku;
+
 namespace SudokuServer.Models
 {
     public class Field

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using Grpc.Core;
 
+using Sudoku;
+
 using SudokuServer.Services;
 
 namespace SudokuServer.Models
