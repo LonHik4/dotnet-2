@@ -34,7 +34,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Background="White"  Margin="1">
-                                    <xctk:AutoSelectTextBox Width="32" Height="32"  Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NumToStringConverter}}" TextChanged="textChangedEventHandler"/>
+                                    <TextBox Width="32" Height="32"  Text="{Binding Path=Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NumToStringConverter}}" TextChanged="textChangedEventHandler"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

@@ -1,18 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 using ReactiveUI;
 
@@ -36,6 +24,7 @@ namespace SudokuClient.Views
                 if (ViewModel is not ScoreViewModel viewModel)
                     return;
                 viewModel.ShowPlayWindow.RegisterHandler(ShowPlay);
+                viewModel.ShowLoginWindow.RegisterHandler(ShowLogin);
             });
         }
 
@@ -43,7 +32,7 @@ namespace SudokuClient.Views
         {
             return Observable.Start(() =>
             {
-                var viewModel = new PlayViewModel(ctx.Input); 
+                var viewModel = new PlayViewModel(ctx.Input);
                 var window = new PlayWindow { ViewModel = viewModel };
                 window.Show();
 
@@ -52,6 +41,19 @@ namespace SudokuClient.Views
                 ctx.SetOutput(Unit.Default);
             }, RxApp.MainThreadScheduler);
 
+        }
+
+        private IObservable<Unit> ShowLogin(InteractionContext<Unit, Unit> ctx)
+        {
+            return Observable.Start(() =>
+            {
+                var window = new LoginWindow { ViewModel = new LoginViewModel() };
+                window.Show();
+
+                Close();
+
+                ctx.SetOutput(Unit.Default);
+            }, RxApp.MainThreadScheduler);
         }
     }
 }

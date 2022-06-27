@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -12,10 +8,13 @@ using SudokuClient.ViewModels;
 
 namespace SudokuClient.Views
 {
-    public class BaseWindow<TViewModel> : ReactiveWindow<TViewModel> where TViewModel : class 
+    public class BaseWindow<TViewModel> : ReactiveWindow<TViewModel> where TViewModel : class
     {
         protected BaseWindow()
         {
+            Icon = FindResource("WindowIcon") as System.Windows.Media.ImageSource;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             this.WhenActivated(d =>
             {
                 if (ViewModel is not BaseViewModel viewModel)

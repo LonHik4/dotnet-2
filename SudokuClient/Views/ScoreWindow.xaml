@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:SudokuClient.Views"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
         Title="Sudoku" Height="350" Width="300">

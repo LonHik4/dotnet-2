@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +16,7 @@ using SudokuClient.Models;
 
 namespace SudokuClient
 {
-    public class Client
+    public class Client : IDisposable
     {
         public Player Player { get; private set; } = new();
         public Field? Field { get; private set; }
@@ -28,13 +24,16 @@ namespace SudokuClient
         public IObservable<Unit> SuccessLoginEvent => _loginSubject;
         public IObservable<Unit> PLayStartEvent => _playSubject;
         public IObservable<bool> TurnEvent => _turnSubject;
+
+        public IObservable<Unit> WinEvent => _winSubject;
         public IObservable<string> DisconnectedEvent => _disconnectedSubject;
 
         private readonly GrpcChannel _channel;
         private readonly AsyncDuplexStreamingCall<Request, Event> _stream;
         private readonly Subject<Unit> _loginSubject = new();
         private readonly Subject<Unit> _playSubject = new();
-        private readonly Subject<bool> _turnSubject = new();
+        public readonly Subject<bool> _turnSubject = new();
+        public readonly Subject<Unit> _winSubject = new();
         private readonly Subject<string> _disconnectedSubject = new();
         private bool _alreadyDisconnected = false;
 
@@ -120,7 +119,7 @@ namespace SudokuClient
                             _turnSubject.OnNext(stream.Current.Turn.Success);
                             break;
                         case Event.EventOneofCase.Win:
-                            throw new InvalidOperationException();
+                            _winSubject.OnNext(Unit.Default);
                             break;
                     }
                 }
@@ -135,16 +134,20 @@ namespace SudokuClient
         {
             RxApp.MainThreadScheduler.Schedule(Unit.Default, (scheduler, state) =>
             {
-              
+
                 if (_alreadyDisconnected)
                     return Disposable.Empty;
                 _alreadyDisconnected = true;
-                _disconnectedSubject.OnNext(message);                    
+                _disconnectedSubject.OnNext(message);
 
                 return Disposable.Empty;
-                
+
             });
         }
 
+        public void Dispose()
+        {
+            _channel.Dispose();
+        }
     }
 }

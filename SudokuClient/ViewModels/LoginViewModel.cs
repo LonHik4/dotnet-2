@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System.Reactive.Linq;
 
 namespace SudokuClient.ViewModels
 
@@ -42,9 +44,17 @@ namespace SudokuClient.ViewModels
             {
                 Client client = new Client($"{ServerAddress}:{ServerPort}");
 
-                client.SuccessLoginEvent.Subscribe(async _ => await ShowScoreWindow.Handle(client));
+                _disposables.Add(client.SuccessLoginEvent.Subscribe(async _ =>
+                {
+                    await ShowScoreWindow.Handle(client);
+                    DisposeSubscriptions();
+                }));
 
-                client.DisconnectedEvent.Subscribe(async s => await ShowErrorInteraction.Handle(s) );
+                _disposables.Add(client.DisconnectedEvent.Subscribe(async s =>
+                {
+                    await ShowErrorInteraction.Handle(s);
+                    DisposeSubscriptions();
+                }));
 
                 await client.LoginRequest(Login);
 
@@ -55,5 +65,15 @@ namespace SudokuClient.ViewModels
                 return Unit.Default;
             }
         }
+
+        private void DisposeSubscriptions()
+        {
+            foreach (var d in _disposables)
+                d.Dispose();
+
+            _disposables.Clear();
+        }
+
+        private readonly List<IDisposable> _disposables = new();
     }
 }

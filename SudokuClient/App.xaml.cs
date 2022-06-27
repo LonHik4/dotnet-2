@@ -1,10 +1,6 @@
-using System;
-using System.Reactive;
 using System.Windows;
 
 using SudokuClient.ViewModels;
-
-using ReactiveUI;
 using SudokuClient.Views;
 
 namespace SudokuClient

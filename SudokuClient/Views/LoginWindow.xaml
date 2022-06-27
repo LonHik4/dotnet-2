@@ -10,10 +10,8 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterScreen"
-        Icon="{StaticResource WindowIcon}"
         DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
-        Title="Sudoku" Height="200" Width="350">
+        Title="Sudoku">
 
 
 

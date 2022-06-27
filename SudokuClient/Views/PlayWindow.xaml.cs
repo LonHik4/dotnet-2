@@ -1,21 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 using ReactiveUI;
-
-using Sudoku;
 
 using SudokuClient.ViewModels;
 
@@ -31,46 +20,66 @@ namespace SudokuClient.Views
         public PlayWindow()
         {
             InitializeComponent();
-            //this.WhenActivated(d =>
-            //{
-            //    if (ViewModel is not PlayViewModel viewModel)
-            //        return;
-            //    viewModel.ServerResponse.RegisterHandler(ChangePoint);
-            //});
+            this.WhenActivated(d =>
+            {
+                if (ViewModel is not PlayViewModel viewModel)
+                    return;
+                viewModel.ShowWinInteraction.RegisterHandler(ShowWin);
+                viewModel.ShowLoginWindow.RegisterHandler(ShowLogin);
+            });
         }
 
-        //private IObservable<Unit> ChangePoint(InteractionContext<Point, Unit> ctx)
-        //{
-        //    return Observable.Start(() =>
-        //    {
-        //        var viewModel = new PlayViewModel(ctx.Input);
-        //        var window = new PlayWindow { ViewModel = viewModel };
-        //        window.Show();
+        private IObservable<Unit> ShowWin(InteractionContext<Unit, Unit> ctx)
+        {
+            return Observable.Start(() =>
+            {
+                var window = new LoginWindow { ViewModel = new LoginViewModel() };
+                window.Show();
+                Close();
+                MessageBox.Show("You won!", "Victory", MessageBoxButton.OK, MessageBoxImage.Information);
 
-        //        Close();
+                ctx.SetOutput(Unit.Default);
+            }, RxApp.MainThreadScheduler);
 
-        //        ctx.SetOutput(Unit.Default);
-        //    }, RxApp.MainThreadScheduler);
-
-        //}
+        }
 
         private async void textChangedEventHandler(object sender, TextChangedEventArgs args) // sender is TextBox.DataContext
         {
             var textBox = sender as TextBox;
             var d = args.Source as TextBox;
 
-            var test = d.GetBindingExpression(TextBox.TextProperty).DataItem as Point;
-            //ViewModel.TryChange(test, "5);
+            var test = d.GetBindingExpression(TextBox.TextProperty).DataItem as Sudoku.Point;
 
-            //if (!ViewModel.TryChange(test))
-            //{
-            //    var point = textBox.DataContext as Point;
-            //    test.Value =  point.Value;
-            //}
 
-            textBox.Text =  (await ViewModel.TryChange(test)).ToString();
+            if (textBox.Text != String.Empty)
+            {
+                int valueFromTextBox = int.Parse(textBox.Text);
 
-            Console.WriteLine($"{args.OriginalSource.GetType()}");
+                if (valueFromTextBox < 0 || valueFromTextBox > 9)
+                {
+                    textBox.Text = "";
+                    return;
+                }
+            }
+
+            textBox.TextChanged -= textChangedEventHandler;
+            textBox.Text = (await ViewModel.TryChange(test)).ToString();
+            textBox.TextChanged += textChangedEventHandler;
+
+            Console.WriteLine("change");
+        }
+
+        private IObservable<Unit> ShowLogin(InteractionContext<Unit, Unit> ctx)
+        {
+            return Observable.Start(() =>
+            {
+                var window = new LoginWindow { ViewModel = new LoginViewModel() };
+                window.Show();
+
+                Close();
+
+                ctx.SetOutput(Unit.Default);
+            }, RxApp.MainThreadScheduler);
         }
     }
 }

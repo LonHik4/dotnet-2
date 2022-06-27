@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace SudokuClient.ViewModels
 {
-    public class ScoreViewModel: BaseViewModel
+    public class ScoreViewModel : BaseViewModel
     {
         public string Login => _client.Player.Login;
 
@@ -22,6 +19,8 @@ namespace SudokuClient.ViewModels
         public ReactiveCommand<Unit, Unit> PlayCommand { get; }
 
         public Interaction<Client, Unit> ShowPlayWindow { get; } = new();
+
+        public Interaction<Unit, Unit> ShowLoginWindow { get; } = new();
 
         public ScoreViewModel(Client client)
         {
@@ -34,9 +33,18 @@ namespace SudokuClient.ViewModels
         {
             try
             {
-                _client.PLayStartEvent.Subscribe(async _ => await ShowPlayWindow.Handle(_client));
+                _disposables.Add(_client.PLayStartEvent.Subscribe(async _ =>
+                {
+                    await ShowPlayWindow.Handle(_client);
+                    DisposeSubscriptions();
+                }));
 
-                _client.DisconnectedEvent.Subscribe(async s => await ShowErrorInteraction.Handle(s));
+                _disposables.Add(_client.DisconnectedEvent.Subscribe(async s =>
+                {
+                    await ShowErrorInteraction.Handle(s);
+                    await ShowLoginWindow.Handle(Unit.Default);
+                    DisposeSubscriptions();
+                }));
 
                 await _client.PlayRequest();
 
@@ -48,7 +56,14 @@ namespace SudokuClient.ViewModels
             }
         }
 
+        private void DisposeSubscriptions()
+        {
+            foreach (var d in _disposables)
+                d.Dispose();
 
+            _disposables.Clear();
+        }
 
+        private readonly List<IDisposable> _disposables = new();
     }
 }
