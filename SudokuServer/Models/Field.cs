@@ -39,7 +39,7 @@ namespace SudokuServer.Models
         public bool ChangePoint(Point point)
         {
             var fixedPoint = FixedPoints.FirstOrDefault(p => p.X == point.X && p.Y == point.Y);
-            if (fixedPoint is not null || !Check(point))
+            if (fixedPoint is not null || (point.Value != 0 && !Check(point)))
                 return false;
 
             this[point.X, point.Y] = point.Value;

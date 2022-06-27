@@ -52,6 +52,7 @@ namespace SudokuServer.Models
                         {
                             _player.Solved.Add(_field.Id);
                             await SendWinEvent();
+                            return;
                         }
                     }
                 }

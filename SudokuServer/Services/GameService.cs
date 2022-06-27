@@ -28,12 +28,11 @@ namespace SudokuServer.Services
         {
             if (_players.TryGetValue(loginRequest.Login, out _))
             {
-                await SendLoginEvent(responseStream, false);
+                await SendLoginEvent(responseStream, false, 0);
                 return;
             }
-            await SendLoginEvent(responseStream, true);
-
             var player = await _playersRepository.GetPlayer(loginRequest.Login);
+
             if (player is null)
             {
                 player = new Player() { Login = loginRequest.Login };
@@ -43,6 +42,8 @@ namespace SudokuServer.Services
                     return;
                 }
             }
+            await SendLoginEvent(responseStream, true, player.Solved.Count);
+
             if (!_players.TryAdd(loginRequest.Login, player))
                 return;
             try
@@ -69,9 +70,9 @@ namespace SudokuServer.Services
             }
         }
 
-        private static async Task SendLoginEvent(IServerStreamWriter<Event> responseStream, bool success)
+        private static async Task SendLoginEvent(IServerStreamWriter<Event> responseStream, bool success, int score)
         {
-            var loginEvent = new LoginEvent() { Success = success };
+            var loginEvent = new LoginEvent() { Success = success, Score = score };
             await responseStream.WriteAsync(new Event() { Login = loginEvent });
         }
 
